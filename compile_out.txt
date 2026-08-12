@@ -1,0 +1,23 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------< com.pavan:employee-management-backend >----------------
+[INFO] Building  0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.5.0:clean (default-clean) @ employee-management-backend ---
+[INFO] Deleting C:\SPRINGBOOTWS\employee-management-backend\target
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ employee-management-backend ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ employee-management-backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 62 source files with javac [debug parameters release 21] to target\classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  9.695 s
+[INFO] Finished at: 2026-08-07T15:35:01+05:30
+[INFO] ------------------------------------------------------------------------
