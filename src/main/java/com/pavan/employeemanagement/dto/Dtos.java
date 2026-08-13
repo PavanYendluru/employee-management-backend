@@ -399,6 +399,14 @@ public final class Dtos {
     ) {
     }
 
+    /** Result returned by a CSV import. Failed rows never prevent valid rows from being saved. */
+    public record BulkImportResult(
+            String module,
+            int totalRows,
+            int importedRows,
+            List<String> errors
+    ) { }
+
     // ============================================================
     // PROJECT REQUEST DTO
     // ============================================================

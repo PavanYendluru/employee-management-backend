@@ -31,6 +31,12 @@ public class ApiExceptionHandler {
         return ResponseEntity.badRequest().body(Map.of("message", "Request body is missing or malformed"));
     }
 
+    /** Returns a usable client error for malformed CSV files and unsupported import modules. */
+    @ExceptionHandler(IllegalArgumentException.class)
+    ResponseEntity<Map<String, String>> illegalArgument(IllegalArgumentException exception) {
+        return ResponseEntity.badRequest().body(Map.of("message", exception.getMessage()));
+    }
+
     /** Reports database uniqueness and relationship constraints without exposing vendor details. */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<Map<String, String>> dataIntegrity(DataIntegrityViolationException exception) {
