@@ -5,6 +5,7 @@ import com.pavan.employeemanagement.service.HrmsService;
 import java.util.List;
 import java.time.LocalDate;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /** Returns aggregate data for dashboard cards. */
@@ -14,16 +15,28 @@ public class DashboardController {
     private final HrmsService hrmsService;
 
     /** Injects the business service used to build dashboard data. */
-    public DashboardController(HrmsService hrmsService) { this.hrmsService = hrmsService; }
+    public DashboardController(HrmsService hrmsService) {
+        this.hrmsService = hrmsService;
+    }
 
     /** Gets the current organization overview (basic). */
     @GetMapping("/overview")
-    public DashboardView overview() { return hrmsService.dashboard(); }
+    public DashboardView overview() {
+        return hrmsService.dashboard();
+    }
 
-    /** Gets the enhanced HR dashboard with live attendance, leave, and payroll data. */
+    /**
+     * Gets the enhanced HR dashboard with live attendance, leave, and payroll data.
+     */
     @GetMapping("/hr")
     public ResponseEntity<DashboardViewEnhanced> hrDashboard() {
         return ResponseEntity.ok(hrmsService.dashboardEnhanced());
+    }
+
+    /** Returns chart-ready counts calculated from the current HRMS database. */
+    @GetMapping("/analytics")
+    public ResponseEntity<AnalyticsView> analytics(Authentication authentication) {
+        return ResponseEntity.ok(hrmsService.analytics(authentication.getName()));
     }
 
     /** Gets employee overview data for the employee dashboard. */

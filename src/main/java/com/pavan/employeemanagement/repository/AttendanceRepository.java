@@ -10,6 +10,7 @@ public interface AttendanceRepository extends JpaRepository<Attendance, Long> {
     long countByStatusAndDate(AttendanceStatus status, LocalDate date);
     long countByStatusAndDateAndEmployeeStatus(AttendanceStatus status, LocalDate date, EmployeeStatus employeeStatus);
     long countByDate(LocalDate date);
+    long countByStatus(AttendanceStatus status);
     List<Attendance> findByEmployeeIdAndDateBetweenOrderByDateDesc(Long employeeId, LocalDate start, LocalDate end);
     Optional<Attendance> findByEmployeeIdAndDate(Long employeeId, LocalDate date);
     @Query("SELECT a FROM Attendance a JOIN FETCH a.employee WHERE a.date = :date ORDER BY a.checkIn")

@@ -231,6 +231,17 @@ public final class Dtos {
     ) {
     }
 
+    /** Compact, database-derived aggregates used by the HR analytics charts. */
+    public record AnalyticsMetric(String name, long value) { }
+
+    public record AnalyticsView(
+            List<AnalyticsMetric> departmentHeadcount,
+            List<AnalyticsMetric> employeeStatus,
+            List<AnalyticsMetric> attendanceStatus,
+            List<AnalyticsMetric> leaveStatus,
+            List<AnalyticsMetric> taskStatus
+    ) { }
+
     // ============================================================
     // UPCOMING BIRTHDAY VIEW DTO
     // ============================================================
@@ -444,7 +455,7 @@ public final class Dtos {
     public record TaskRequest(
             @NotBlank String title,
             String description,
-            @NotBlank String priority,
+            @NotBlank @jakarta.validation.constraints.Pattern(regexp = "HIGH|MEDIUM|LOW", message = "Priority must be HIGH, MEDIUM, or LOW") String priority,
             @NotNull LocalDate dueDate,
             @NotNull Long assignedToId
     ) {

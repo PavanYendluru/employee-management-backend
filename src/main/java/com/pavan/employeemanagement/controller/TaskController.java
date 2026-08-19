@@ -20,7 +20,7 @@ public class TaskController {
 
     /** Lists all tasks (HR view). */
     @GetMapping("/tasks")
-    public List<TaskView> list() { return hrmsService.tasks(); }
+    public List<TaskView> list(Authentication authentication) { return hrmsService.tasks(authentication.getName()); }
 
     /** Lists tasks assigned to the signed-in employee. */
     @GetMapping("/me/tasks")
@@ -30,8 +30,8 @@ public class TaskController {
 
     /** Filters tasks by workflow status. */
     @GetMapping("/tasks/status/{status}")
-    public List<TaskView> byStatus(@PathVariable TaskStatus status) {
-        return hrmsService.tasksByStatus(status);
+    public List<TaskView> byStatus(@PathVariable TaskStatus status, Authentication authentication) {
+        return hrmsService.tasksByStatus(status, authentication.getName());
     }
 
     /** Creates a new task (HR). */

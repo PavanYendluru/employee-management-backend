@@ -1044,7 +1044,25 @@ List<Payroll> records = payrollRepository.findByMonthWithEmployee(effectiveMonth
     // Task workflow operations
     // -------------------------------------------------------------------------
 
-    public List<TaskView> tasks() {
+    /** Builds chart aggregates in the service layer so the browser never needs mock data. */
+    public AnalyticsView analytics(String actorEmail) {
+        requireTaskManager(user(actorEmail));
+        List<AnalyticsMetric> departments = departmentRepository.findAll().stream()
+                .map(department -> new AnalyticsMetric(department.getName(), employeeRepository.countByDepartmentId(department.getId())))
+                .toList();
+        List<AnalyticsMetric> employeeStatuses = java.util.Arrays.stream(EmployeeStatus.values())
+                .map(status -> new AnalyticsMetric(status.name(), employeeRepository.countByStatus(status))).toList();
+        List<AnalyticsMetric> attendanceStatuses = java.util.Arrays.stream(AttendanceStatus.values())
+                .map(status -> new AnalyticsMetric(status.name(), attendanceRepository.countByStatus(status))).toList();
+        List<AnalyticsMetric> leaveStatuses = java.util.Arrays.stream(LeaveStatus.values())
+                .map(status -> new AnalyticsMetric(status.name(), leaveRepository.countByStatus(status))).toList();
+        List<AnalyticsMetric> taskStatuses = java.util.Arrays.stream(TaskStatus.values())
+                .map(status -> new AnalyticsMetric(status.name(), taskRepository.countByStatus(status))).toList();
+        return new AnalyticsView(departments, employeeStatuses, attendanceStatuses, leaveStatuses, taskStatuses);
+    }
+
+    public List<TaskView> tasks(String actorEmail) {
+        requireTaskManager(user(actorEmail));
         return taskRepository.findAllByOrderByCreatedAtDesc().stream()
                 .map(this::toTaskView)
                 .toList();
@@ -1060,7 +1078,8 @@ List<Payroll> records = payrollRepository.findByMonthWithEmployee(effectiveMonth
                 .toList();
     }
 
-    public List<TaskView> tasksByStatus(TaskStatus status) {
+    public List<TaskView> tasksByStatus(TaskStatus status, String actorEmail) {
+        requireTaskManager(user(actorEmail));
         return taskRepository.findByStatusOrderByCreatedAtDesc(status).stream()
                 .map(this::toTaskView)
                 .toList();
@@ -1068,6 +1087,7 @@ List<Payroll> records = payrollRepository.findByMonthWithEmployee(effectiveMonth
 
     public TaskView createTask(TaskRequest request, String actorEmail) {
         User actor = user(actorEmail);
+        requireTaskManager(actor);
         Task task = new Task();
         task.setTitle(request.title());
         task.setDescription(request.description());
@@ -1158,6 +1178,12 @@ List<Payroll> records = payrollRepository.findByMonthWithEmployee(effectiveMonth
 
     public void deleteTask(Long id) {
         taskRepository.delete(findTask(id));
+    }
+
+    private void requireTaskManager(User actor) {
+        if (actor.getRole() != Role.ADMIN && actor.getRole() != Role.HR) {
+            throw new AccessDeniedException("Only HR or administrators can manage organization tasks");
+        }
     }
 
     private TaskView toTaskView(Task task) {

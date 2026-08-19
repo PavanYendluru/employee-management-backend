@@ -15,6 +15,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     List<Employee> search(String q);
     
     long countByStatus(EmployeeStatus status);
+    long countByDepartmentId(Long departmentId);
 
     @Query(value = "SELECT * FROM employees e WHERE DATE_FORMAT(e.date_of_birth, '%m-%d') BETWEEN DATE_FORMAT(CURDATE(), '%m-%d') AND DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL :days DAY), '%m-%d')", nativeQuery = true)
     List<Employee> findUpcomingBirthdays(@Param("days") int days);
